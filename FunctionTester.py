@@ -1,5 +1,6 @@
 import inspect
 from PurrdyPrinter import *
+import traceback
 
 class FunctionTester:
     def __init__(self, function):
@@ -29,18 +30,25 @@ class FunctionTester:
             expected_val = self.__get_test_expected_val__(test)
             args = self.__get_test_args__(test)
 
-            ans = self.function(*args)
-
             args_string = ",".join( [str(x) for x in args] )
             func_and_args = "{}({})".format(self.function.__name__, args_string)
 
-            if ans == expected_val:
-                PurrdyPrinter.put("green", "{} passed.".format(func_and_args))
-            else:
+            try:
+                ans = self.function(*args)
+
+                if ans == expected_val:
+                    PurrdyPrinter.put("green", "{} passed.".format(func_and_args))
+                else:
+                    PurrdyPrinter.put("red", "{} failed.".format(func_and_args))
+                    PurrdyPrinter.put("red", "   Expected: {}".format(expected_val))
+                    PurrdyPrinter.put("red", "        Got: {}".format(ans))
+                    num_failed += 1
+            except Exception as ex:
                 PurrdyPrinter.put("red", "{} failed.".format(func_and_args))
-                PurrdyPrinter.put("red", "   Expected: {}".format(expected_val))
-                PurrdyPrinter.put("red", "        Got: {}".format(ans))
+                PurrdyPrinter.put("red", "   Exception: {}".format(ex))
+                PurrdyPrinter.put("pink", "   {}".format(traceback.format_exc()))
                 num_failed += 1
+
 
         if num_failed == 0:
             PurrdyPrinter.put("blue", "\nAll tests passed!")
