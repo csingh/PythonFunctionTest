@@ -69,12 +69,19 @@ def oneArg(A):
 def twoArgs(A,B):
     return (A,B)
 
+def divZero(n):
+    return n / 0
+
 if __name__ == '__main__':
     FT1 = FunctionTester(oneArg)
     FT2 = FunctionTester(twoArgs)
+    FT3 = FunctionTester(divZero)
 
     FT1.addTest(1, 1)
     FT1.addTest(True, True)
     FT1.addTest(1, 2)
 
     FT1.runTests()
+
+    FT3.addTest(0,0)
+    FT3.runTests()
